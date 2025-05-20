@@ -5,38 +5,29 @@ import Modal from './components/Modal';
 
 // Load player sprite
 const playerSheet = new Image();
-playerSheet.src = '/src/assets/pokemon.png'; // Put your 64x64 sprite sheet here
+playerSheet.src = '/assets/pokemon.png'; // ✅ Make sure this is in public/assets
 
 const canvasWidth = gridWidth * tileSize;
 const canvasHeight = gridHeight * tileSize;
 
 export default function App() {
     const canvasRef = useRef(null);
-    const [player] = useState(new Player(1, 1)); // player is stateful via object mutation
+    const [player] = useState(new Player(1, 1));
     const [showModal, setShowModal] = useState(false);
     const [showPrompt, setShowPrompt] = useState(false);
 
-    // Handle key input
+    // 🔁 Handle movement input
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (player.isMoving) return;
-
-            const dxdyMap = {
-                ArrowUp: [0, -1],
-                ArrowDown: [0, 1],
-                ArrowLeft: [-1, 0],
-                ArrowRight: [1, 0],
+            const directionKeys = {
+                ArrowUp: 'up',
+                ArrowDown: 'down',
+                ArrowLeft: 'left',
+                ArrowRight: 'right',
             };
 
-            if (dxdyMap[e.key]) {
-                const [dx, dy] = dxdyMap[e.key];
-                const newX = player.x + dx;
-                const newY = player.y + dy;
-
-                if (isWalkable(newX, newY)) {
-                    player.startMove(dx, dy);
-                    setShowPrompt(isInteractableNearby(newX, newY));
-                }
+            if (directionKeys[e.key]) {
+                player.enqueueMove(directionKeys[e.key]); // ✅ Buffer movement input
             }
 
             if (e.key === 'e' || e.key === 'E') {
@@ -50,10 +41,9 @@ export default function App() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [player]);
 
-    // Game render loop
+    // 🎮 Game Loop: Movement, Animation, Drawing
     useEffect(() => {
         const ctx = canvasRef.current.getContext('2d');
-
         const directionMap = {
             down: 0,
             left: 1,
@@ -62,7 +52,12 @@ export default function App() {
         };
 
         const draw = () => {
-            player.updatePosition();
+            player.updatePosition(isWalkable);
+
+            // Interaction prompt logic
+            if (!player.isMoving) {
+                setShowPrompt(isInteractableNearby(player.x, player.y));
+            }
 
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -79,7 +74,7 @@ export default function App() {
                 }
             }
 
-            // Draw player
+            // Draw player sprite
             const spriteSize = 64;
             const sx = player.frame * spriteSize;
             const sy = directionMap[player.direction] * spriteSize;
