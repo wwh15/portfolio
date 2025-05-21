@@ -4,9 +4,14 @@ import GameCanvas from './canvas/GameCanvas';
 import Modal from './components/Modal';
 import './styles/game.css';
 
+
 // Load sprite sheet (can move to preload if needed)
 const playerSheet = new Image();
 playerSheet.src = '/assets/pokemon.png'; // Make sure this exists in public/assets/
+
+const tileset = new Image();
+tileset.src = '/assets/tileset.png';
+
 
 export default function App() {
     const [player] = useState(new Player(1, 1));
@@ -19,6 +24,7 @@ export default function App() {
                 <GameCanvas
                     player={player}
                     spriteSheet={playerSheet}
+                    tileset={tileset}
                     onShowModal={() => setShowModal(true)}
                     onUpdatePrompt={setShowPrompt}
                 />

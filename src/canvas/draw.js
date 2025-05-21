@@ -1,22 +1,29 @@
-import { tileSize } from '../game/map';
+import {tileSize} from "../game/map.js";
 
-export function drawMap(ctx, map, camera) {
+export function drawMap(ctx, map, camera, tileset) {
+    if (!tileset || !tileset.complete || tileset.naturalWidth === 0) return;
+
+    const tilesPerRow = 4;
+
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[0].length; x++) {
-            let fill = '#999';
-            if (map[y][x] === 1) fill = '#333'; // wall
-            else if (map[y][x] === 2) fill = '#0ff'; // interactable
+            const tileIndex = map[y][x];
+            const sx = (tileIndex % tilesPerRow) * tileSize;
+            const sy = Math.floor(tileIndex / tilesPerRow) * tileSize;
 
             const screenX = x * tileSize - camera.x;
             const screenY = y * tileSize - camera.y;
 
-            ctx.fillStyle = fill;
-            ctx.fillRect(screenX, screenY, tileSize, tileSize);
-            ctx.strokeStyle = '#222';
-            ctx.strokeRect(screenX, screenY, tileSize, tileSize);
+            ctx.drawImage(
+                tileset,
+                sx, sy, tileSize, tileSize,
+                screenX, screenY, tileSize, tileSize
+            );
         }
     }
 }
+
+
 
 export function drawPlayer(ctx, player, camera, spriteSheet) {
     const directionMap = {

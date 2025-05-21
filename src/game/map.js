@@ -1,10 +1,15 @@
 export const tileSize = 64;
 
-export const map = Array.from({ length: 10 }, (_, y) =>
-    Array.from({ length: 10 }, (_, x) =>
-        y === 0 || y === 9 || x === 0 || x === 9 ? 1 : 0
-    )
-);
+// tile IDs are arbitrary examples — match to your tileset layout
+export const map = [
+    [1, 1, 1, 1, 1, 1, 1, 1], // walls (top row)
+    [1, 15, 15, 3, 3, 15, 15, 1], // floor + bed
+    [1, 15, 15, 15, 15, 15, 15, 1], // floor
+    [1, 15, 15, 2, 2, 15, 15, 1], // floor + rug
+    [1, 15, 15, 15, 15, 4, 15, 1], // floor + desk
+    [1, 1, 1, 1, 1, 1, 1, 1], // walls (bottom row)
+];
+
 
 
 export const gridWidth = map[0].length;

@@ -1,22 +1,21 @@
-import { useEffect, useRef } from 'react';
-import { drawMap, drawPlayer } from './draw';
-import { getCameraPosition } from './camera';
-import { attachInput } from '../game/input';
-import { isWalkable, isInteractableNearby, map, tileSize, gridWidth, gridHeight } from '../game/map';
+import {useEffect, useRef} from 'react';
+import {drawMap, drawPlayer} from './draw';
+import {getCameraPosition} from './camera';
+import {attachInput} from '../game/input';
+import {gridHeight, gridWidth, isInteractableNearby, isWalkable, map, tileSize} from '../game/map';
 
-export default function GameCanvas({ player, spriteSheet, onShowModal, onUpdatePrompt }) {
+export default function GameCanvas({ player, spriteSheet, tileset, onShowModal, onUpdatePrompt }) {
     const canvasRef = useRef(null);
     const canvasWidth = gridWidth * tileSize;
     const canvasHeight = gridHeight * tileSize;
 
     // Attach input
     useEffect(() => {
-        const detach = attachInput(player, () => {
+        return attachInput(player, () => {
             if (isInteractableNearby(player.x, player.y)) {
                 onShowModal();
             }
         });
-        return detach;
     }, [player, onShowModal]);
 
     // Game loop
@@ -35,14 +34,14 @@ export default function GameCanvas({ player, spriteSheet, onShowModal, onUpdateP
 
             // Draw
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-            drawMap(ctx, map, camera);
+            drawMap(ctx, map, camera, tileset);
             drawPlayer(ctx, player, camera, spriteSheet);
 
             requestAnimationFrame(loop);
         };
 
         loop();
-    }, [player]);
+    }, [canvasHeight, canvasWidth, onUpdatePrompt, player, spriteSheet, tileset]);
 
     return (
         <canvas
