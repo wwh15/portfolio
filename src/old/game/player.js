@@ -1,11 +1,14 @@
+import {tileSize} from './map.js';
+
+
 export class Player {
     constructor(x, y, direction = 'down') {
         this.x = x;
         this.y = y;
         this.direction = direction;
 
-        this.pixelX = x * 64;
-        this.pixelY = y * 64;
+        this.pixelX = x * tileSize;
+        this.pixelY = y * tileSize;
         this.targetX = this.pixelX;
         this.targetY = this.pixelY;
 
@@ -55,8 +58,8 @@ export class Player {
         this.x += dx;
         this.y += dy;
         this.direction = this.getDirection(dx, dy);
-        this.targetX = this.x * 64;
-        this.targetY = this.y * 64;
+        this.targetX = this.x * tileSize;
+        this.targetY = this.y * tileSize;
         this.isMoving = true;
         this.lastFrameChange = performance.now(); // reset animation timing
     }

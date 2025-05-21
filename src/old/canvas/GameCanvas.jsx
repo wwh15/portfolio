@@ -1,8 +1,8 @@
 import {useEffect, useRef} from 'react';
-import {drawMap, drawPlayer} from './draw';
-import {getCameraPosition} from './camera';
-import {attachInput} from '../game/input';
-import {gridHeight, gridWidth, isInteractableNearby, isWalkable, map, tileSize} from '../game/map';
+import {drawMap, drawPlayer} from './draw.js';
+import {getCameraPosition} from './camera.js';
+import {attachInput} from '../game/input.js';
+import {gridHeight, gridWidth, isInteractableNearby, isWalkable, map, tileSize} from '../game/map.js';
 
 export default function GameCanvas({ player, spriteSheet, tileset, onShowModal, onUpdatePrompt }) {
     const canvasRef = useRef(null);
